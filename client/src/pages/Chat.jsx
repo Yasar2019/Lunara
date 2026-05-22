@@ -9,18 +9,19 @@ const Chat = () => {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
 
-  const load = async () => {
-    const { data } = await api.get(`/messages/${matchId}`);
-    setMessages(data.messages || []);
-  };
-
   useEffect(() => {
+    const load = async () => {
+      const { data } = await api.get(`/messages/${matchId}`);
+      setMessages(data.messages || []);
+    };
+
     load();
   }, [matchId]);
 
   const send = async (text) => {
     await api.post(`/messages/${matchId}`, { text });
-    await load();
+    const { data } = await api.get(`/messages/${matchId}`);
+    setMessages(data.messages || []);
   };
 
   return (
