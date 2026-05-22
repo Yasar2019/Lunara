@@ -1,0 +1,76 @@
+:root {
+  font-family: Inter, system-ui, Arial, sans-serif;
+  color: #fff;
+  background: radial-gradient(circle at top, #2d1b69, #0f1020 55%, #090b14);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+a { color: #d5b7ff; text-decoration: none; }
+
+.page { max-width: 900px; margin: 2rem auto; padding: 1rem; }
+.stack { display: grid; gap: 1rem; }
+.center-text { text-align: center; }
+
+.navbar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(14px);
+  background: rgba(25, 28, 49, 0.65);
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+.logo { font-weight: 800; color: #f5c4ff; }
+.nav-links { display: flex; gap: 0.75rem; align-items: center; }
+
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 1rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.form { display: grid; gap: 0.75rem; max-width: 520px; margin: 0 auto; }
+input, textarea, button {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+}
+input, textarea { background: rgba(10, 15, 30, 0.65); color: #fff; }
+button, .button-link {
+  background: linear-gradient(90deg, #8a5cff, #ff5fb2, #43b5ff);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  display: inline-block;
+}
+.button-link.secondary { background: rgba(255,255,255,0.16); }
+.actions-row { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+
+.profile-photo { width: 100%; max-height: 350px; object-fit: cover; border-radius: 16px; }
+.badge { font-size: 0.75rem; background: #3dd68c; color: #052; padding: 0.2rem 0.45rem; border-radius: 999px; }
+.compatibility { color: #8ff8c8; font-weight: 600; }
+.subtle { color: #c7c8df; }
+.error { color: #ff9fae; }
+
+.match-card { display: flex; gap: 1rem; align-items: center; }
+.avatar { width: 68px; height: 68px; border-radius: 50%; object-fit: cover; }
+
+.chat-box { display: grid; gap: 0.75rem; }
+.messages { max-height: 50vh; overflow: auto; display: grid; gap: 0.4rem; }
+.message { max-width: 75%; padding: 0.45rem 0.7rem; border-radius: 10px; background: rgba(255,255,255,0.18); }
+.message.mine { justify-self: end; background: rgba(138, 92, 255, 0.5); }
+.chat-input-row { display: flex; gap: 0.5rem; }
+
+@media (max-width: 640px) {
+  .nav-links { gap: 0.5rem; font-size: 0.9rem; }
+  .page { margin-top: 1rem; }
+}
