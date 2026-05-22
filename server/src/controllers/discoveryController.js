@@ -15,7 +15,13 @@ const getDiscovery = async (req, res, next) => {
     const ageMax = Number(req.query.ageMax || 100);
     const me = await User.findById(req.user._id);
 
-    const excluded = [me._id, ...me.likedUsers, ...me.passedUsers, ...me.blockedUsers];
+    const excluded = [
+      me._id,
+      ...me.likedUsers,
+      ...(me.superLikedUsers || []),
+      ...me.passedUsers,
+      ...me.blockedUsers,
+    ];
 
     const candidates = await User.find({
       _id: { $nin: excluded },
@@ -39,7 +45,9 @@ const getDiscovery = async (req, res, next) => {
 
 const createMatchIfMutual = async (userId, targetId) => {
   const target = await User.findById(targetId);
-  const likedBack = target?.likedUsers?.some((id) => id.toString() === userId.toString());
+  const likedBack =
+    target?.likedUsers?.some((id) => id.toString() === userId.toString()) ||
+    target?.superLikedUsers?.some((id) => id.toString() === userId.toString());
 
   if (!likedBack) return null;
 
@@ -94,11 +102,24 @@ const pass = async (req, res, next) => {
 
 const superLike = async (req, res, next) => {
   try {
-    const result = await like(req, res, next);
-    if (!res.headersSent) {
-      return result;
+    const me = await User.findById(req.user._id);
+    const targetId = req.params.id;
+
+    if (me._id.toString() === targetId) {
+      return res.status(400).json({ message: 'Cannot super-like yourself' });
     }
-    return null;
+
+    if (!me.superLikedUsers.some((id) => id.toString() === targetId)) {
+      me.superLikedUsers.push(targetId);
+    }
+    if (!me.likedUsers.some((id) => id.toString() === targetId)) {
+      me.likedUsers.push(targetId);
+    }
+    me.passedUsers = me.passedUsers.filter((id) => id.toString() !== targetId);
+    await me.save();
+
+    const match = await createMatchIfMutual(me._id, targetId);
+    return res.json({ message: 'Super liked', match, isSuperLike: true });
   } catch (error) {
     return next(error);
   }

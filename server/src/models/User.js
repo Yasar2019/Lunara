@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema(
     vibeTags: [{ type: String, trim: true }],
     prompts: [promptSchema],
     likedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    superLikedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     passedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     verified: { type: Boolean, default: false },

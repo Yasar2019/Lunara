@@ -13,17 +13,32 @@ const me = async (req, res, next) => {
 
 const updateMe = async (req, res, next) => {
   try {
-    const blockedFields = ['password', 'email'];
-    blockedFields.forEach((field) => delete req.body[field]);
-
     if (containsAbusiveContent(req.body.bio || '')) {
       return res.status(400).json({ message: 'Bio contains disallowed content' });
     }
 
-    const user = await User.findByIdAndUpdate(req.user._id, req.body, {
-      new: true,
-      runValidators: true,
+    const allowedFields = [
+      'name',
+      'age',
+      'gender',
+      'interestedIn',
+      'bio',
+      'location',
+      'photos',
+      'interests',
+      'relationshipGoal',
+      'vibeTags',
+      'prompts',
+      'verified',
+    ];
+
+    const user = await User.findById(req.user._id);
+    allowedFields.forEach((field) => {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        user[field] = req.body[field];
+      }
     });
+    await user.save();
 
     return res.json({ user });
   } catch (error) {

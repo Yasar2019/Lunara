@@ -4,13 +4,6 @@ const User = require('../models/User');
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-const cookieOptions = {
-  httpOnly: true,
-  sameSite: 'lax',
-  secure: process.env.NODE_ENV === 'production',
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-};
-
 const sanitizeUser = (user) => {
   const object = user.toObject();
   delete object.password;
@@ -40,9 +33,7 @@ const register = async (req, res, next) => {
       isAdultConfirmed,
       photos: ['https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400'],
     });
-
     const token = signToken(user._id);
-    res.cookie('token', token, cookieOptions);
     return res.status(201).json({ user: sanitizeUser(user), token });
   } catch (error) {
     return next(error);
@@ -62,9 +53,7 @@ const login = async (req, res, next) => {
     if (!valid) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-
     const token = signToken(user._id);
-    res.cookie('token', token, cookieOptions);
     return res.json({ user: sanitizeUser(user), token });
   } catch (error) {
     return next(error);
@@ -72,7 +61,6 @@ const login = async (req, res, next) => {
 };
 
 const logout = async (req, res) => {
-  res.clearCookie('token', cookieOptions);
   return res.json({ message: 'Logged out' });
 };
 
